@@ -5,10 +5,14 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { Link } from "react-router-dom";
 import UserService from '../../Services/userService.js';
+import Dashboard from '../Dashboard/Dashboard';
+import NoteService from '../../Services/noteService';
 
 
-const emailRegex = RegExp('^$[0-9a-zA-Z]+([._+-][0-9a-zA-Z])*@[0-9a-zA-Z]+.[a-zA-Z]{2,4}(.[a-zA-Z]{2})*$');
-const passwordRegex = RegExp('^[A-Z][a-z]{2,}$');
+const emailRegex = RegExp(/^[0-9a-zA-Z]+([._+-][0-9a-zA-Z]+)*@[0-9a-zA-Z]+.[a-zA-Z]{2,4}([.][a-zA-Z]{2,3})?$/);
+const passwordRegex = RegExp(/((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,})/);
+
+//const emailRegex = RegExp('^$[0-9a-zA-Z]+([._+-][0-9a-zA-Z])*@[0-9a-zA-Z]+.[a-zA-Z]{2,4}(.[a-zA-Z]{2})*$');
 
 const service = new UserService();
 
@@ -79,19 +83,23 @@ return isValid;
 		else{
 			console.log('login successful');
 		let userData = {
-         email: this.state.username,
-         service: "advance",
-         password: this.state.password
+         email: this.state.Email,
+         password: this.state.password,
         
-    }
-    service.registration(userData).then(data => {
+    };
+    service.signin(userData)
+    .then((data) => {
       console.log(data);
-    }).catch(error => {
+      localStorage.setItem('userToken', data.data.id);
+      localStorage.setItem('email', data.data.email);
+      this.props.history.push('/dashboard');
+          })
+    .catch((error) => {
       console.log(error);
-    })
+    });
  }
-
   }
+  // service: "advance",
 
 	render() {
 	         return  <div class="container2">
@@ -108,12 +116,12 @@ return isValid;
 					<TextField fullWidth id="outlined-full-width" size='small' error={this.state.passwordErrorFlag} helperText={this.state.passwordMsg} label="Password" name="password" margin="normal" variant="outlined" onChange={this.changeHandler} />
           <div className="bottom">
             <div className="flex-gap">
-              <Button color="primary">Forgot Password</Button>
+              <Button component={Link} to="/forgotpassword" color="primary"  >Forgot Password</Button>
             </div>
           </div>
           <div className="loginbutton">
-					<Button>Create account</Button>
-          <Button className="Submit" onClick={this.submit} variant="contained" color="primary" href="#contained-buttons">
+					<Button component={Link} to="/Registration">Create account</Button>
+          <Button component={Link} to="/Dashboard" className="Submit"  onClick={this.submit} variant="contained" color="primary" href="#contained-buttons">
           submit</Button>
 				 </div>
         </div>

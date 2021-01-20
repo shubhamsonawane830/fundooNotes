@@ -5,14 +5,15 @@ import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import UserService from '../../Services/userService.js';
+import { Link } from "react-router-dom";
 import './Registration.css';
 
  const service = new UserService();
 
 const nameRegex = RegExp('^[A-Z][a-z]{2,}$');
 // const emailRegex = RegExp('^$[0-9a-zA-Z]+([._+-][0-9a-zA-Z])*@[0-9a-zA-Z]+.[a-zA-Z]{2,4}(.[a-zA-Z]{2})*$');
-const passwordRegex = RegExp('^[A-Z][a-z]{2,}$');
-const emailRegex = RegExp('^[A-Z][a-z]{2,}$');
+const passwordRegex = RegExp(/((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,})/);
+const emailRegex = RegExp(/^[0-9a-zA-Z]+([._+-][0-9a-zA-Z]+)*@[0-9a-zA-Z]+.[a-zA-Z]{2,4}([.][a-zA-Z]{2,3})?$/);
 
 
 
@@ -115,14 +116,21 @@ if (this.state.confirmpassword.length===0) {
 	isValid=true
 }
 
-if (this.state.confirmpassword.length>0 && !passwordRegex.test(this.state.password)) {
-	this.setState({
-		confirmpasswordErrorFlag: true,
-		confirmpasswordMsg: 'ConfirmPassword is invalid !'
-		})
-	isValid=true
-}
+// if (this.state.confirmpassword.length>0 && !passwordRegex.test(this.state.password)) {
+// 	this.setState({
+// 		confirmpasswordErrorFlag: true,
+// 		confirmpasswordMsg: 'ConfirmPassword is invalid !'
+// 		})
+// 	isValid=true
+// }
 
+if(this.state.password != this.state.confirmpassword){
+	this.setState({
+				confirmpasswordErrorFlag: true,
+		confirmpasswordMsg: 'Password Mismatch !'
+ 		})
+ 	isValid=true
+}
 		return isValid;
 	}
 
@@ -130,18 +138,19 @@ if (this.state.confirmpassword.length>0 && !passwordRegex.test(this.state.passwo
 		console.log("Hello");
 		e.preventDefault();
 		if (this.validate()){
-			console.log('login failed');
+			console.log('Registration failed');
 		}
 		else{
-			console.log('login successful', this.state.firstname, this.state.username, this.state.password);
+			console.log('Registration successful', this.state.firstname, this.state.username, this.state.password);
 		let userData = {
 			firstName: this.state.firstname,
 			lastName: this.state.lastname,
-			service: "advance",
-     		email: this.state.username,
+			 service: "advance",
+     		email: this.state.Email,
             password: this.state.password,
         
 		}
+		
 		 service.registration(userData).then(data => {
 			 console.log(data);
 		 }).catch(error => {
@@ -183,7 +192,7 @@ if (this.state.confirmpassword.length>0 && !passwordRegex.test(this.state.passwo
 				</div>
 				</div>
               <div className="registrationbutton">
-				<Button>Sign in instead</Button>
+				<Button component={Link} to="/Signin">Sign in instead</Button>
 					<Button className="Registrationsubmit" onClick={this.submit} variant="contained" color="primary" href="#contained-buttons">
           submit</Button>
 		  

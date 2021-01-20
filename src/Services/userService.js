@@ -2,9 +2,10 @@ import Axios from './axiosService';
 const httpService= new Axios();
 
 export default class UserService {
-    baseurl="http://fundoonotes.incubation.bridgelabz.com/api/";
+     baseurl="http://fundoonotes.incubation.bridgelabz.com/api/";
+
    registration = (data) => {
-       return httpService.Post(`${this.baseUrl}user/userSignUp`,data)
+       return httpService.Post(`${this.baseurl}user/userSignUp`,data);
    }
    signin =  (data) => {
        return httpService.Post(`${this.baseurl}user/login`, data);
@@ -19,7 +20,5 @@ export default class UserService {
            },
        });
    }
-
-
 
 }

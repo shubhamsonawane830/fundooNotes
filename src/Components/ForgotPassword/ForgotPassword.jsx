@@ -5,7 +5,10 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { FormHelperText } from "@material-ui/core";
 import { Link } from "react-router-dom";
+import UserService from '../../Services/userService.js'
 
+
+const service = new UserService();
 
 const emailRegex = RegExp('^$[0-9a-zA-Z]+([._+-][0-9a-zA-Z])*@[0-9a-zA-Z]+.[a-zA-Z]{2,4}(.[a-zA-Z]{2})*$');
 

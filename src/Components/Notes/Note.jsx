@@ -22,7 +22,7 @@ const useStyles = makeStyles({
 })
 
 
-export default function Note() {
+export default function Note(props) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(null);
     const [clr, setClr] = React.useState("#ffff");
@@ -41,6 +41,10 @@ export default function Note() {
         "#a1887f",
         "#cfd8dc",
 ];
+
+//   const setColor = (value) =>{
+//       props.handleclr(value)
+//   }
     const colorsHandleClick = () => {
         setOpen(true);
     };
@@ -53,13 +57,13 @@ export default function Note() {
         console.log(color);
     };
 
-const ColorBlock = () => {
+  const ColorBlock = () => {
     return (
     <div>
         <Menu open={Boolean(open)} onClose={colorsHandleClose}>
             <div className={classes.colorMenu}>
                 {colors.map((color) => (
-                    <div className={classes.colorDot}><IconButton className={classes.colorButton} onClick={setClr(color)} style={{ backgroundColor: color }} /></div>
+                    <div className={classes.colorDot}><IconButton className={classes.colorButton} onClick={()=>props.handleclr(color.color)} style={{ backgroundColor: color }} /></div>
 
                 ))}
             </div>
@@ -81,6 +85,7 @@ const ColorBlock = () => {
            <IconButton onMouseOver={colorsHandleClick} >
                <ColorLensIcon />
            </IconButton>
+           < ColorBlock />
            <IconButton>
                <ImageIcon />
            </IconButton>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState }  from 'react';
 import clsx from 'clsx';
 import { fade, makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -27,8 +27,13 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import keep from '../../Assets/keep.png';
 import './Dashboard.css';
-import AddNotes from './AddNotes.jsx';
+import AddNotes from '../AddNotes/AddNotes.jsx';
+import DisplayNote from '../DisplayNotes/DisplayNote.jsx';
+import NoteService from '../../Services/noteService';
+import Note from '../Notes/Note';
+import { valHooks } from 'jquery';
 
+const service = new NoteService();
 
 const drawerWidth = 240;
 
@@ -44,9 +49,12 @@ const useStyles = makeStyles((theme) => ({
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
+      display: 'flex',
     }),
-    // backgroundColor: 'white',
-    // color: 'black',
+    width: '100%',
+    boxShadow: 'none',
+    backgroundColor: 'white',
+    color: 'black',
   },
   // appBarShift: {
   //   marginLeft: drawerWidth,
@@ -93,8 +101,11 @@ const useStyles = makeStyles((theme) => ({
   },
   toolbar: {
     display: 'flex',
+    flexDirection:'row',
+    width: '100%',
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    // justifyContent: 'flex-end',
+    // flexGrow:'1',
     padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
@@ -158,6 +169,7 @@ const useStyles = makeStyles((theme) => ({
     minHeight: 'calc(100vh)',
     display: 'flex',
     justifyContent: 'center',
+    flexDirection: 'column',
   },
   icon: {
     width: '40px',
@@ -200,6 +212,19 @@ export default function Dashboard() {
     setOpen(false);
   };
 
+  const [display,setDisplayNote] = useState([]);
+  const getAllNotes=()=>{
+    service.getNote(localStorage.getItem("userToken"))
+    .then((data)=>{
+      let arrayData= data.data.data.data;
+      console.log(data);
+     setDisplayNote(arrayData);      
+    })
+    .catch((error)=>{
+      console.log(error);
+    });
+    }
+
   return (
 
 <div className={classes.root}>
@@ -207,13 +232,13 @@ export default function Dashboard() {
        <AppBar
         position="fixed"
         className={classes.appBar}
-        style={{backgroundColor: "white", color: "black"}}
+        // style={{backgroundColor: "white", color: "black",display: 'flex', flexDirection: 'row'}}
       //     , {
       //     [classes.appBarShift]: open,
       //   })}
       >
-        <Toolbar>
-          <div className={classes.toolBar}>
+        <Toolbar className={classes.toolBar}>
+          {/* <div className={classes.toolBar}> */}
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -226,7 +251,7 @@ export default function Dashboard() {
             <MenuIcon />
           </IconButton>
           {/* <div className="logo"> */}
-            <img  src={keep} alt="Logo" width="70" height="50" />
+            <img src="/assets/keep_2020q4_48dp.png" alt=" " width="45" height="45" />
           {/* </div> */}
           <Typography className={classes.title} variant="h6" noWrap>
             FundooNotes
@@ -234,6 +259,9 @@ export default function Dashboard() {
           <IconButton className={classes.searchHide}>
             <SearchIcon />
             </IconButton>
+            <div className="searchStyle">
+            <SearchIcon />
+            <InputBase placeholder="Search..." /></div>
           {/* <div className={classes.Search}>
             <div className={classes.SearchIcon}>
               <SearchIcon />
@@ -248,10 +276,10 @@ export default function Dashboard() {
             /> */}
           {/* </div>
           </div> */}
-          {/* <div>
+          <div>
             <Avatar alt="Shubham Sonawane" src="" />
-          </div> */}
           </div>
+          {/* </div> */}
         </Toolbar>
           </AppBar>
           <Drawer
@@ -308,7 +336,19 @@ export default function Dashboard() {
         </Typography>
         <Typography paragraph>
         </Typography> */}
-        <AddNotes />
+                <AddNotes />
+        {/* <AddNotes passNote={addNote} /> */}
+        <DisplayNote />
+        {/* {addItem.map((val, index) => {
+          return (
+          <DisplayNote
+            key={index}
+            id={index}
+            title={val.title}
+            content={val.content}
+            />
+           );
+        })} */}
       </main>  
            </div>
           
